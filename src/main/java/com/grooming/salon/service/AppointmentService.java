@@ -44,7 +44,6 @@ public class AppointmentService {
         Pet pet = petRepository.findById(dto.getPetId())
                 .orElseThrow(() -> new BusinessRuleException("Pet not found."));
 
-        // Security check: Ensure the pet actually belongs to the logged-in user
         if (!pet.getOwner().getId().equals(ownerId)) {
             throw new BusinessRuleException("You do not have permission to book for this pet.");
         }
@@ -65,12 +64,28 @@ public class AppointmentService {
         Appointment appt = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new BusinessRuleException("Appointment not found."));
 
-        // Security check
         if (!appt.getPet().getOwner().getId().equals(userId)) {
             throw new BusinessRuleException("You do not have permission to cancel this appointment.");
         }
 
         appt.setStatus("CANCELLED");
+        appointmentRepository.save(appt);
+    }
+
+    public Appointment getAppointmentById(UUID appointmentId) {
+        return appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new BusinessRuleException("Appointment not found."));
+    }
+
+    public void rescheduleAppointment(UUID appointmentId, AppointmentDto dto, UUID userId) {
+        Appointment appt = getAppointmentById(appointmentId);
+
+        if (!appt.getPet().getOwner().getId().equals(userId)) {
+            throw new BusinessRuleException("You do not have permission to edit this appointment.");
+        }
+
+        // Update the date
+        appt.setAppointmentDate(dto.getAppointmentDate());
         appointmentRepository.save(appt);
     }
 }

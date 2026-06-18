@@ -1,20 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head><title>Add Pet</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Paws & Relax | Add Pet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<h2>Register a New Pet</h2>
-<form th:action="@{/pets/add}" th:object="${petDto}" method="post">
-    <div>
-        <label>Name:</label>
-        <input type="text" th:field="*{name}" />
-        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></span>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <div>
+            <a href="/dashboard">Back to Dashboard</a>
+        </div>
     </div>
-    <div>
-        <label>Breed:</label>
-        <input type="text" th:field="*{breed}" />
-        <span th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}" style="color:red;"></span>
+</nav>
+
+<div class="container">
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <h2>Register a New Pet</h2>
+        <form th:action="@{/pets/add}" th:object="${petDto}" method="post">
+
+            <div>
+                <label>Pet's Name</label>
+                <input type="text" th:field="*{name}" placeholder="e.g. Max" />
+                <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div>
+                <label>Breed</label>
+                <input type="text" th:field="*{breed}" placeholder="e.g. Golden Retriever" />
+                <div class="error-text" th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}"></div>
+            </div>
+
+            <button type="submit">Save Pet</button>
+        </form>
     </div>
-    <button type="submit">Save Pet</button>
-</form>
+</div>
 </body>
 </html>

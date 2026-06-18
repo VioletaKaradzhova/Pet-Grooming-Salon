@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head><title>Login</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Paws & Relax | Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<h2>Login</h2>
-<form th:action="@{/login}" method="post">
-    <label>Username: <input type="text" name="username" required/></label>
-    <label>Password: <input type="password" name="password" required/></label>
-    <button type="submit">Login</button>
-</form>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div th:if="${errorMessage != null}" class="alert" th:text="${errorMessage}"></div>
+
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <h2>Welcome Back!</h2>
+
+        <form th:object="${loginDto}" method="post">
+            <div>
+                <label>Username</label>
+                <input type="text" th:field="*{username}" placeholder="e.g. doglover99" />
+                <div class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+            </div>
+
+            <div>
+                <label>Password</label>
+                <input type="password" th:field="*{password}" placeholder="********" />
+                <div class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" th:formaction="@{/login}" style="flex: 1;">Login</button>
+                <button type="submit" th:formaction="@{/register}" style="flex: 1; background-color: var(--primary-color);">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

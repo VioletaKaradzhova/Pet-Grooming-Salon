@@ -1,11 +1,41 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head><title>Edit Appointment</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Paws & Relax | Reschedule</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<h2>Reschedule Appointment</h2>
-<form th:action="@{/appointments/{id}/edit(id=${appointmentId})}" method="post">
-    <input type="datetime-local" name="newDate" required/>
-    <button type="submit">Update</button>
-</form>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <div>
+            <a href="/dashboard">Back to Dashboard</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <h2>Reschedule Appointment</h2>
+
+        <form th:action="@{/appointments/{id}/edit(id=${appointmentId})}" th:object="${appointmentDto}" method="post">
+
+            <div>
+                <label>New Date & Time</label>
+                <input type="datetime-local" th:field="*{appointmentDate}" />
+                <div class="error-text" th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}"></div>
+            </div>
+
+            <input type="hidden" th:field="*{petId}" />
+            <input type="hidden" th:field="*{servicePackageId}" />
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" style="flex: 1;">Update Appointment</button>
+                <a href="/dashboard" class="btn" style="flex: 1; background-color: gray; text-align: center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

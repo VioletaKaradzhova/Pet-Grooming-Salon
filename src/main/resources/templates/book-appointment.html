@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head><title>Book Appointment</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Paws & Relax | Book Appointment</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<h2>Book an Appointment</h2>
-<form th:action="@{/appointments/book}" method="post">
-    <input type="datetime-local" name="appointmentDate" required/>
-    <button type="submit">Book</button>
-</form>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <div>
+            <a href="/dashboard">Back to Dashboard</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <h2>Book a Spa Day</h2>
+
+        <form th:action="@{/appointments/book}" th:object="${appointmentDto}" method="post">
+
+            <div>
+                <label>Which Pet?</label>
+                <select th:field="*{petId}">
+                    <option value="" disabled selected>Select a pet...</option>
+                    <option th:each="pet : ${userPets}" th:value="${pet.id}" th:text="${pet.name} + ' (' + ${pet.breed} + ')'"></option>
+                </select>
+                <div class="error-text" th:if="${#fields.hasErrors('petId')}" th:errors="*{petId}"></div>
+            </div>
+
+            <div>
+                <label>Choose a Service</label>
+                <select th:field="*{servicePackageId}">
+                    <option value="" disabled selected>Select a package...</option>
+                    <option th:each="pkg : ${servicePackages}" th:value="${pkg.id}" th:text="${pkg.name} + ' - $' + ${pkg.price}"></option>
+                </select>
+                <div class="error-text" th:if="${#fields.hasErrors('servicePackageId')}" th:errors="*{servicePackageId}"></div>
+            </div>
+
+            <div>
+                <label>Date & Time</label>
+                <input type="datetime-local" th:field="*{appointmentDate}" />
+                <div class="error-text" th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}"></div>
+            </div>
+
+            <button type="submit">Confirm Booking</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

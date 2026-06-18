@@ -1,9 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head><title>Paws & Relax Salon</title></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Paws & Relax | Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<h1>Welcome to Paws & Relax Pet Grooming!</h1>
-<p>We offer the best grooming services in town.</p>
-<a href="/login">Login or Register</a>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <div>
+            <a href="/login">Login / Register</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <h1>Welcome to Paws & Relax! 🐶🧼</h1>
+        <p style="font-size: 1.2rem;">The premier spa experience for your furry best friends.</p>
+        <br>
+        <a href="/login" class="btn">Get Started</a>
+    </div>
+</div>
 </body>
 </html>

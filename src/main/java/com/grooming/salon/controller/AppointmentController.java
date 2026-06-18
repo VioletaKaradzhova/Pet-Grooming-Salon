@@ -1,6 +1,7 @@
 package com.grooming.salon.controller;
 
 import com.grooming.salon.model.dto.AppointmentDto;
+import com.grooming.salon.model.entity.Appointment;
 import com.grooming.salon.service.AppointmentService;
 import com.grooming.salon.service.PetService;
 import jakarta.servlet.http.HttpSession;
@@ -68,6 +69,42 @@ public class AppointmentController {
         }
 
         appointmentService.cancelAppointment(id, userId);
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable UUID id, HttpSession session, Model model) {
+        UUID userId = (UUID) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/login";
+
+        // Fetch existing appointment to pre-fill the form
+        Appointment appt = appointmentService.getAppointmentById(id);
+
+        AppointmentDto dto = new AppointmentDto();
+        dto.setAppointmentDate(appt.getAppointmentDate());
+        dto.setPetId(appt.getPet().getId());
+        dto.setServicePackageId(appt.getServicePackage().getId());
+
+        model.addAttribute("appointmentDto", dto);
+        model.addAttribute("appointmentId", id);
+        return "edit-appointment";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editAppointment(@PathVariable UUID id,
+                                  @Valid @ModelAttribute("appointmentDto") AppointmentDto dto,
+                                  BindingResult bindingResult,
+                                  HttpSession session,
+                                  Model model) {
+        UUID userId = (UUID) session.getAttribute("user_id");
+        if (userId == null) return "redirect:/login";
+
+        if (bindingResult.hasFieldErrors("appointmentDate")) {
+            model.addAttribute("appointmentId", id);
+            return "edit-appointment";
+        }
+
+        appointmentService.rescheduleAppointment(id, dto, userId);
         return "redirect:/dashboard";
     }
 }

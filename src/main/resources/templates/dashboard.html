@@ -1,13 +1,58 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head><title>Dashboard</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Paws & Relax | Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<h2>Your Dashboard</h2>
-<a href="/pets/add">Add a Pet</a> | <a href="/appointments/book">Book Appointment</a>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <div>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+</nav>
 
-<h3>Your Pets</h3>
-<ul>
-    <li th:each="pet : ${pets}" th:text="${pet.name} + ' (' + ${pet.breed} + ')'"></li>
-</ul>
+<div class="container">
+    <h1>Your Dashboard</h1>
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>🐕 My Pets</h3>
+            <a href="/pets/add" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">+ Add Pet</a>
+        </div>
+
+        <p th:if="${pets == null or pets.isEmpty()}">You haven't added any pets yet!</p>
+        <ul>
+            <li th:each="pet : ${pets}" class="item-row">
+                <strong th:text="${pet.name}"></strong> <span th:text="'(' + ${pet.breed} + ')'"></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>📅 Upcoming Appointments</h3>
+            <a href="/appointments/book" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">Book Service</a>
+        </div>
+
+        <p th:if="${appointments == null or appointments.isEmpty()}">No upcoming appointments.</p>
+        <ul>
+            <li th:each="appt : ${appointments}" class="item-row">
+                <div>
+                    <strong th:text="${appt.pet.name}"></strong> -
+                    <span th:text="${appt.servicePackage.name}"></span><br>
+                    <small style="color: gray;" th:text="${#temporals.format(appt.appointmentDate, 'dd MMM yyyy, HH:mm')}"></small>
+                    <span th:text="${' [' + appt.status + ']'}"></span>
+                </div>
+                <form th:if="${appt.status == 'SCHEDULED'}" th:action="@{/appointments/{id}/cancel(id=${appt.id})}" method="post" style="margin:0;">
+                    <button type="submit" class="btn-danger">Cancel</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>
