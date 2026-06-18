@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><title>Add Pet</title></head>
 <body>
-
+<h2>Register a New Pet</h2>
+<form th:action="@{/pets/add}" th:object="${petDto}" method="post">
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" />
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></span>
+    </div>
+    <div>
+        <label>Breed:</label>
+        <input type="text" th:field="*{breed}" />
+        <span th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}" style="color:red;"></span>
+    </div>
+    <button type="submit">Save Pet</button>
+</form>
 </body>
 </html>

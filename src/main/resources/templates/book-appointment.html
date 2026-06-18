@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><title>Book Appointment</title></head>
 <body>
-
+<h2>Book an Appointment</h2>
+<form th:action="@{/appointments/book}" method="post">
+    <input type="datetime-local" name="appointmentDate" required/>
+    <button type="submit">Book</button>
+</form>
 </body>
 </html>
