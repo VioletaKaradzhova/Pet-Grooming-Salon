@@ -33,7 +33,6 @@ public class AppointmentService {
     }
 
     public List<Appointment> getAppointmentsByPetOwner(UUID ownerId) {
-        // Fetches all pets for the owner, then gets all appointments for those pets
         List<Pet> ownerPets = petRepository.findAllByOwnerId(ownerId);
         return appointmentRepository.findAll().stream()
                 .filter(appt -> ownerPets.contains(appt.getPet()))
@@ -84,8 +83,24 @@ public class AppointmentService {
             throw new BusinessRuleException("You do not have permission to edit this appointment.");
         }
 
-        // Update the date
         appt.setAppointmentDate(dto.getAppointmentDate());
+        appointmentRepository.save(appt);
+    }
+
+    public void updateAppointmentStatus(UUID appointmentId, String newStatus) {
+        Appointment appt = getAppointmentById(appointmentId);
+        String currentStatus = appt.getStatus();
+
+        if (currentStatus.equals("COMPLETE") || currentStatus.equals("CANCELLED")) {
+            throw new BusinessRuleException("Cannot alter an appointment that is already " + currentStatus);
+        }
+
+        if (!newStatus.equals("SCHEDULED") && !newStatus.equals("IN_PROGRESS") &&
+                !newStatus.equals("COMPLETE") && !newStatus.equals("CANCELLED")) {
+            throw new BusinessRuleException("Invalid status update requested.");
+        }
+
+        appt.setStatus(newStatus);
         appointmentRepository.save(appt);
     }
 }

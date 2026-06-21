@@ -2,6 +2,7 @@ package com.grooming.salon.controller;
 
 import com.grooming.salon.exception.BusinessRuleException;
 import com.grooming.salon.model.dto.LoginDto;
+import com.grooming.salon.model.entity.Role;
 import com.grooming.salon.model.entity.User;
 import com.grooming.salon.service.AuthService;
 import jakarta.servlet.http.HttpSession;
@@ -49,7 +50,12 @@ public class AuthController {
             session.setAttribute("user_id", user.getId());
             session.setAttribute("user_role", user.getRole().name());
 
+            if (user.getRole() != Role.CLIENT) {
+                return "redirect:/admin/dashboard";
+            }
+
             return "redirect:/dashboard";
+
         } catch (BusinessRuleException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "login";
@@ -71,7 +77,12 @@ public class AuthController {
             session.setAttribute("user_id", user.getId());
             session.setAttribute("user_role", user.getRole().name());
 
+            if (user.getRole() != Role.CLIENT) {
+                return "redirect:/admin/dashboard";
+            }
+
             return "redirect:/dashboard";
+
         } catch (BusinessRuleException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "register";

@@ -8,34 +8,70 @@
 <body>
 <nav>
     <div class="nav-container">
-        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <a href="/" class="brand">🐾 Paws & Relax [STAFF AREA]</a>
         <ul class="nav-menu">
 
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-
-            <li>
-                <a href="/services">Services ▼</a>
-                <div class="dropdown-content">
-                    <a href="/services/bath-and-brush">Bath & Brush</a>
-                    <a href="/services/full-spa">Full Grooming Spa</a>
-                    <a href="/services/nail-trim">Nail Trim & File</a>
-                    <a href="/services/flea-tick">Flea & Tick Treatment</a>
-                    <a href="/services/puppy-trim">Puppy's First Trim</a>
-                </div>
-            </li>
+            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li>
+                    <a href="/services">Services ▼</a>
+                    <div class="dropdown-content">
+                        <a href="/services/bath-and-brush">Bath & Brush</a>
+                        <a href="/services/full-spa">Full Grooming Spa</a>
+                        <a href="/services/nail-trim">Nail Trim & File</a>
+                        <a href="/services/flea-tick">Flea & Tick Treatment</a>
+                        <a href="/services/puppy-trim">Puppy's First Trim</a>
+                    </div>
+                </li>
+            </th:block>
 
             <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
-            <li th:if="${session.user_id != null}"><a href="/dashboard">Dashboard</a></li>
-            <li th:if="${session.user_role == 'STAFF' or session.user_role == 'MANAGEMENT'}"><a href="/admin/dashboard" style="color: var(--secondary-color);">Admin</a></li>
+
+            <li th:if="${session.user_role == 'CLIENT'}"><a href="/dashboard">Dashboard</a></li>
+
+            <li th:if="${session.user_role != null and session.user_role != 'CLIENT'}">
+                <a href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
+            </li>
+
             <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
 
 <div class="container">
-    <h1>Salon Management Dashboard</h1>
+    <h1 style="color: var(--secondary-color);">Salon Management System</h1>
+
+    <div class="card" th:if="${session.user_role == 'ADMIN' or session.user_role == 'MANAGEMENT'}">
+        <h3>🛡️ Create New Employee</h3>
+        <div th:if="${employeeCreationError != null}" class="alert" th:text="${employeeCreationError}"></div>
+
+        <form th:action="@{/admin/employees/create}" th:object="${employeeDto}" method="post" style="display: flex; gap: 15px; align-items: flex-end; flex-direction: row; flex-wrap: wrap;">
+
+            <div style="flex: 1; min-width: 200px;">
+                <label>Username</label>
+                <input type="text" th:field="*{username}" placeholder="username" />
+                <div class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+            </div>
+
+            <div style="flex: 1; min-width: 200px;">
+                <label>Password</label>
+                <input type="password" th:field="*{password}" placeholder="********" />
+                <div class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+
+            <div style="flex: 1; min-width: 200px;">
+                <label>Role</label>
+                <select th:field="*{role}">
+                    <option value="STAFF">STAFF</option>
+                    <option th:if="${session.user_role == 'ADMIN'}" value="MANAGEMENT">MANAGEMENT</option>
+                </select>
+            </div>
+
+            <button type="submit" style="padding: 12px 20px;">Create Account</button>
+        </form>
+    </div>
 
     <div class="card">
         <h3>📅 All Salon Appointments</h3>
@@ -46,9 +82,21 @@
                 <div>
                     <strong th:text="${appt.pet.name} + ' (' + ${appt.pet.owner.username} + ')'"></strong> -
                     <span th:text="${appt.servicePackage.name}"></span><br>
-
                     <small style="color: gray;" th:text="${#temporals.format(appt.appointmentDate, 'dd MMM yyyy, HH:mm')}"></small>
-                    <span th:text="${' [' + appt.status + ']'}"></span>
+                    <span th:text="${' [' + appt.status + ']'}"
+                          th:style="${appt.status == 'COMPLETE' ? 'color: green; font-weight: bold;' : (appt.status == 'CANCELLED' ? 'color: red;' : 'color: var(--secondary-color);')}">
+                        </span>
+                </div>
+
+                <div th:if="${appt.status != 'COMPLETE' and appt.status != 'CANCELLED'}">
+                    <form th:action="@{/admin/appointments/{id}/status(id=${appt.id})}" method="post" style="display: flex; gap: 10px; flex-direction: row;">
+                        <select name="status" style="padding: 5px; font-size: 0.9rem;">
+                            <option value="IN_PROGRESS" th:selected="${appt.status == 'IN_PROGRESS'}">In Progress</option>
+                            <option value="COMPLETE">Complete</option>
+                            <option value="CANCELLED">Cancel</option>
+                        </select>
+                        <button type="submit" style="padding: 5px 15px; font-size: 0.9rem;">Update</button>
+                    </form>
                 </div>
             </li>
         </ul>
@@ -59,9 +107,8 @@
         <ul>
             <li th:each="user : ${allUsers}" class="item-row">
                 <strong th:text="${user.username}"></strong>
-
                 <span th:text="'Role: ' + ${user.role}"
-                      th:style="${user.role.name() != 'CLIENT' ? 'color: var(--secondary-color); font-weight: bold;' : 'color: gray;'}">
+                      th:style="${user.role.name() == 'ADMIN' ? 'color: red; font-weight: bold;' : (user.role.name() != 'CLIENT' ? 'color: var(--secondary-color); font-weight: bold;' : 'color: gray;')}">
                     </span>
             </li>
         </ul>
@@ -71,13 +118,18 @@
 <footer>
     <div class="footer-container">
         <div class="footer-links">
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-            <a href="/services">Services</a>
+            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/services">Services</a>
+            </th:block>
 
             <a th:if="${session.user_id == null}" href="/login">Login / Register</a>
-            <a th:if="${session.user_id != null}" href="/dashboard">Dashboard</a>
+
+            <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard">Dashboard</a>
+
+            <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
         </div>
         <div class="copyright">
             &copy; 2026 Paws & Relax. All rights reserved.

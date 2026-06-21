@@ -1,7 +1,9 @@
 package com.grooming.salon.service;
 
 import com.grooming.salon.exception.BusinessRuleException;
+import com.grooming.salon.model.dto.EmployeeDto;
 import com.grooming.salon.model.dto.LoginDto;
+import com.grooming.salon.model.entity.Role;
 import com.grooming.salon.model.entity.User;
 import com.grooming.salon.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,13 @@ public class AuthService {
 
     public User registerUser(LoginDto dto) {
         if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
-            throw new BusinessRuleException("Username is not available.");
+            throw new BusinessRuleException("Username is already taken.");
         }
 
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(hashPassword(dto.getPassword()));
+        user.setRole(Role.CLIENT);
 
         return userRepository.save(user);
     }
@@ -46,6 +49,27 @@ public class AuthService {
         }
 
         return user;
+    }
+
+    public void createEmployee(EmployeeDto dto, String creatorRoleString) {
+        Role creatorRole = Role.valueOf(creatorRoleString);
+
+        if (creatorRole == Role.MANAGEMENT && dto.getRole() != Role.STAFF) {
+            throw new BusinessRuleException("Management can only create Staff accounts.");
+        } else if (creatorRole == Role.STAFF || creatorRole == Role.CLIENT) {
+            throw new BusinessRuleException("You do not have permission to create employees.");
+        }
+
+        if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
+            throw new BusinessRuleException("Username is already taken.");
+        }
+
+        User employee = new User();
+        employee.setUsername(dto.getUsername());
+        employee.setPassword(hashPassword(dto.getPassword()));
+        employee.setRole(dto.getRole());
+
+        userRepository.save(employee);
     }
 
     private String hashPassword(String password) {

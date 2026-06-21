@@ -11,24 +11,30 @@
         <a href="/" class="brand">🐾 Paws & Relax</a>
         <ul class="nav-menu">
 
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-
-            <li>
-                <a href="/services">Services ▼</a>
-                <div class="dropdown-content">
-                    <a href="/services/bath-and-brush">Bath & Brush</a>
-                    <a href="/services/full-spa">Full Grooming Spa</a>
-                    <a href="/services/nail-trim">Nail Trim & File</a>
-                    <a href="/services/flea-tick">Flea & Tick Treatment</a>
-                    <a href="/services/puppy-trim">Puppy's First Trim</a>
-                </div>
-            </li>
+            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li>
+                    <a href="/services">Services ▼</a>
+                    <div class="dropdown-content">
+                        <a href="/services/bath-and-brush">Bath & Brush</a>
+                        <a href="/services/full-spa">Full Grooming Spa</a>
+                        <a href="/services/nail-trim">Nail Trim & File</a>
+                        <a href="/services/flea-tick">Flea & Tick Treatment</a>
+                        <a href="/services/puppy-trim">Puppy's First Trim</a>
+                    </div>
+                </li>
+            </th:block>
 
             <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
-            <li th:if="${session.user_id != null}"><a href="/dashboard">Dashboard</a></li>
-            <li th:if="${session.user_role == 'STAFF' or session.user_role == 'MANAGEMENT'}"><a href="/admin/dashboard" style="color: var(--secondary-color);">Admin</a></li>
+
+            <li th:if="${session.user_role == 'CLIENT'}"><a href="/dashboard">Dashboard</a></li>
+
+            <li th:if="${session.user_role != null and session.user_role != 'CLIENT'}">
+                <a href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
+            </li>
+
             <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
         </ul>
     </div>
@@ -55,13 +61,18 @@
 <footer>
     <div class="footer-container">
         <div class="footer-links">
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-            <a href="/services">Services</a>
+            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/services">Services</a>
+            </th:block>
 
             <a th:if="${session.user_id == null}" href="/login">Login / Register</a>
-            <a th:if="${session.user_id != null}" href="/dashboard">Dashboard</a>
+
+            <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard">Dashboard</a>
+
+            <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
         </div>
         <div class="copyright">
             &copy; 2026 Paws & Relax. All rights reserved.
