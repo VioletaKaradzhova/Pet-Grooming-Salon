@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us | Paws & Relax</title>
+    <link rel="stylesheet" th:href="@{/css/style.css(v=2)}">
+</head>
+<body>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <ul class="nav-menu">
+
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+
+            <li>
+                <a href="/services">Services ▼</a>
+                <div class="dropdown-content">
+                    <a href="/services/bath-and-brush">Bath & Brush</a>
+                    <a href="/services/full-spa">Full Grooming Spa</a>
+                    <a href="/services/nail-trim">Nail Trim & File</a>
+                    <a href="/services/flea-tick">Flea & Tick Treatment</a>
+                    <a href="/services/puppy-trim">Puppy's First Trim</a>
+                </div>
+            </li>
+
+            <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
+            <li th:if="${session.user_id != null}"><a href="/dashboard">Dashboard</a></li>
+            <li th:if="${session.user_role == 'STAFF' or session.user_role == 'MANAGEMENT'}"><a href="/admin/dashboard" style="color: var(--secondary-color);">Admin</a></li>
+            <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <h1 style="color: var(--secondary-color);">Our Story</h1>
+        <p style="font-size: 1.1rem; line-height: 1.8; text-align: left;">
+            Founded by lifelong animal lovers, <strong>Paws & Relax</strong> was built on a simple philosophy: every pet deserves to be treated with patience, love, and respect.
+            <br><br>
+            What started as a small neighborhood washing station has blossomed into a full-service, stress-free grooming spa. We believe that grooming is essential not just for looking good, but for your pet's overall health and happiness. Our certified groomers use only the highest quality, pet-safe products to ensure a soothing experience.
+            <br><br>
+            Whether it is a quick nail trim or a full spa day, our team treats your furry family members exactly like our own.
+        </p>
+    </div>
+</div>
+</body>
+</html>

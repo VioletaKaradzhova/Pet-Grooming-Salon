@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us | Paws & Relax</title>
+    <link rel="stylesheet" th:href="@{/css/style.css(v=2)}">
+</head>
+<body>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <ul class="nav-menu">
+
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+
+            <li>
+                <a href="/services">Services ▼</a>
+                <div class="dropdown-content">
+                    <a href="/services/bath-and-brush">Bath & Brush</a>
+                    <a href="/services/full-spa">Full Grooming Spa</a>
+                    <a href="/services/nail-trim">Nail Trim & File</a>
+                    <a href="/services/flea-tick">Flea & Tick Treatment</a>
+                    <a href="/services/puppy-trim">Puppy's First Trim</a>
+                </div>
+            </li>
+
+            <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
+            <li th:if="${session.user_id != null}"><a href="/dashboard">Dashboard</a></li>
+            <li th:if="${session.user_role == 'STAFF' or session.user_role == 'MANAGEMENT'}"><a href="/admin/dashboard" style="color: var(--secondary-color);">Admin</a></li>
+            <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <h1 style="color: var(--secondary-color);">Get in Touch</h1>
+        <p style="text-align: center; margin-bottom: 20px;">Have questions? We'd love to hear from you!</p>
+
+        <div th:if="${successMessage != null}" class="alert" style="background-color: #D4EDDA; color: #155724; border: 1px solid #C3E6CB;" th:text="${successMessage}"></div>
+
+        <form th:action="@{/contact}" th:object="${contactDto}" method="post">
+
+            <div>
+                <label>Your Name</label>
+                <input type="text" th:field="*{name}" placeholder="John Doe" />
+                <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div>
+                <label>Email Address</label>
+                <input type="email" th:field="*{email}" placeholder="john@example.com" />
+                <div class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+
+            <div>
+                <label>Message</label>
+                <textarea th:field="*{message}" rows="5" placeholder="How can we help you?" style="width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 8px; font-family: 'Nunito', sans-serif; resize: vertical; box-sizing: border-box;"></textarea>
+                <div class="error-text" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
+            </div>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

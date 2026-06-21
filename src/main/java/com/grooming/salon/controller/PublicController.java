@@ -1,5 +1,10 @@
 package com.grooming.salon.controller;
 
+import com.grooming.salon.model.dto.ContactDto;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import com.grooming.salon.repository.ServicePackageRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,4 +39,28 @@ public class PublicController {
 
     @GetMapping("/services/puppy-trim")
     public String showPuppyTrim() { return "service-puppy"; }
+
+    @GetMapping("/about")
+    public String showAbout() {
+        return "about";
+    }
+
+    @GetMapping("/contact")
+    public String showContact(Model model) {
+        model.addAttribute("contactDto", new ContactDto());
+        return "contact";
+    }
+
+    @PostMapping("/contact")
+    public String submitContact(@Valid @ModelAttribute("contactDto") ContactDto contactDto,
+                                BindingResult bindingResult,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            return "contact";
+        }
+
+        model.addAttribute("successMessage", "Thank you, " + contactDto.getName() + "! We have received your message and will reply shortly.");
+        model.addAttribute("contactDto", new ContactDto());
+        return "contact";
+    }
 }
