@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Paws & Relax | Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/style.css(v=2)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=3)}">
 </head>
 <body>
 <nav>
@@ -73,5 +73,23 @@
         </ul>
     </div>
 </div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/services">Services</a>
+
+            <a th:if="${session.user_id == null}" href="/login">Login / Register</a>
+            <a th:if="${session.user_id != null}" href="/dashboard">Dashboard</a>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Paws & Relax. All rights reserved.
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>

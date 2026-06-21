@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact Us | Paws & Relax</title>
-    <link rel="stylesheet" th:href="@{/css/style.css(v=2)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=3)}">
 </head>
 <body>
 <nav>
@@ -45,13 +45,13 @@
 
             <div>
                 <label>Your Name</label>
-                <input type="text" th:field="*{name}" placeholder="John Doe" />
+                <input type="text" th:field="*{name}" placeholder="Snoop Dogg" />
                 <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
 
             <div>
                 <label>Email Address</label>
-                <input type="email" th:field="*{email}" placeholder="john@example.com" />
+                <input type="email" th:field="*{email}" placeholder="snoopy@dog.com" />
                 <div class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
             </div>
 
@@ -65,5 +65,23 @@
         </form>
     </div>
 </div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/services">Services</a>
+
+            <a th:if="${session.user_id == null}" href="/login">Login / Register</a>
+            <a th:if="${session.user_id != null}" href="/dashboard">Dashboard</a>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Paws & Relax. All rights reserved.
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>
