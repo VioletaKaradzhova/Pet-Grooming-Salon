@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Nail Trim & File | Paws & Relax</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=2)}">
 </head>
 <body>
+<nav>
+    <div class="nav-container">
+        <a href="/" class="brand">🐾 Paws & Relax</a>
+        <ul class="nav-menu">
+
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+
+            <li>
+                <a href="/services">Services ▼</a>
+                <div class="dropdown-content">
+                    <a href="/services/bath-and-brush">Bath & Brush</a>
+                    <a href="/services/full-spa">Full Grooming Spa</a>
+                    <a href="/services/nail-trim">Nail Trim & File</a>
+                    <a href="/services/flea-tick">Flea & Tick Treatment</a>
+                    <a href="/services/puppy-trim">Puppy's First Trim</a>
+                </div>
+            </li>
+
+            <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
+            <li th:if="${session.user_id != null}"><a href="/dashboard">Dashboard</a></li>
+            <li th:if="${session.user_role == 'STAFF' or session.user_role == 'MANAGEMENT'}"><a href="/admin/dashboard" style="color: var(--secondary-color);">Admin</a></li>
+            <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
 <div class="container">
     <div class="card">
         <h1 style="color: var(--secondary-color);">Nail Trim & File</h1>
