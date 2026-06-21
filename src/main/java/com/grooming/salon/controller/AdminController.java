@@ -63,10 +63,11 @@ public class AdminController {
     @PostMapping("/appointments/{id}/status")
     public String updateStatus(@PathVariable UUID id, @RequestParam("status") String newStatus, HttpSession session, Model model) {
         String role = (String) session.getAttribute("user_role");
+
         if (role == null || role.equals("CLIENT")) return "redirect:/login";
 
         try {
-            appointmentService.updateAppointmentStatus(id, newStatus);
+            appointmentService.updateAppointmentStatus(id, newStatus, role);
         } catch (BusinessRuleException e) {
             model.addAttribute("message", e.getMessage());
             return "error";

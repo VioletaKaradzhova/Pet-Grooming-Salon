@@ -10,7 +10,6 @@
     <div class="nav-container">
         <a href="/" class="brand">🐾 Paws & Relax [STAFF AREA]</a>
         <ul class="nav-menu">
-
             <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
@@ -28,13 +27,10 @@
             </th:block>
 
             <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
-
             <li th:if="${session.user_role == 'CLIENT'}"><a href="/dashboard">Dashboard</a></li>
-
             <li th:if="${session.user_role != null and session.user_role != 'CLIENT'}">
                 <a href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
             </li>
-
             <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
         </ul>
     </div>
@@ -48,19 +44,16 @@
         <div th:if="${employeeCreationError != null}" class="alert" th:text="${employeeCreationError}"></div>
 
         <form th:action="@{/admin/employees/create}" th:object="${employeeDto}" method="post" style="display: flex; gap: 15px; align-items: flex-end; flex-direction: row; flex-wrap: wrap;">
-
             <div style="flex: 1; min-width: 200px;">
                 <label>Username</label>
-                <input type="text" th:field="*{username}" placeholder="username" />
+                <input type="text" th:field="*{username}" placeholder="New employee handle" />
                 <div class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
             </div>
-
             <div style="flex: 1; min-width: 200px;">
                 <label>Password</label>
                 <input type="password" th:field="*{password}" placeholder="********" />
                 <div class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
             </div>
-
             <div style="flex: 1; min-width: 200px;">
                 <label>Role</label>
                 <select th:field="*{role}">
@@ -68,7 +61,6 @@
                     <option th:if="${session.user_role == 'ADMIN'}" value="MANAGEMENT">MANAGEMENT</option>
                 </select>
             </div>
-
             <button type="submit" style="padding: 12px 20px;">Create Account</button>
         </form>
     </div>
@@ -91,9 +83,16 @@
                 <div th:if="${appt.status != 'COMPLETE' and appt.status != 'CANCELLED'}">
                     <form th:action="@{/admin/appointments/{id}/status(id=${appt.id})}" method="post" style="display: flex; gap: 10px; flex-direction: row;">
                         <select name="status" style="padding: 5px; font-size: 0.9rem;">
-                            <option value="IN_PROGRESS" th:selected="${appt.status == 'IN_PROGRESS'}">In Progress</option>
-                            <option value="COMPLETE">Complete</option>
-                            <option value="CANCELLED">Cancel</option>
+
+                            <th:block th:if="${appt.status == 'SCHEDULED'}">
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="CANCELLED">Cancel</option>
+                            </th:block>
+
+                            <th:block th:if="${appt.status == 'IN_PROGRESS'}">
+                                <option value="COMPLETE">Complete</option>
+                            </th:block>
+
                         </select>
                         <button type="submit" style="padding: 5px 15px; font-size: 0.9rem;">Update</button>
                     </form>
@@ -124,11 +123,8 @@
                 <a href="/contact">Contact</a>
                 <a href="/services">Services</a>
             </th:block>
-
             <a th:if="${session.user_id == null}" href="/login">Login / Register</a>
-
             <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard">Dashboard</a>
-
             <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
         </div>
         <div class="copyright">
@@ -136,6 +132,5 @@
         </div>
     </div>
 </footer>
-
 </body>
 </html>

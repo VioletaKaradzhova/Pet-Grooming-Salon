@@ -67,6 +67,10 @@ public class AppointmentService {
             throw new BusinessRuleException("You do not have permission to cancel this appointment.");
         }
 
+        if (!appt.getStatus().equals("SCHEDULED")) {
+            throw new BusinessRuleException("Only SCHEDULED appointments can be cancelled by the client.");
+        }
+
         appt.setStatus("CANCELLED");
         appointmentRepository.save(appt);
     }
@@ -83,11 +87,15 @@ public class AppointmentService {
             throw new BusinessRuleException("You do not have permission to edit this appointment.");
         }
 
+        if (!appt.getStatus().equals("SCHEDULED")) {
+            throw new BusinessRuleException("You can only reschedule an appointment that is SCHEDULED.");
+        }
+
         appt.setAppointmentDate(dto.getAppointmentDate());
         appointmentRepository.save(appt);
     }
 
-    public void updateAppointmentStatus(UUID appointmentId, String newStatus) {
+    public void updateAppointmentStatus(UUID appointmentId, String newStatus, String userRole) {
         Appointment appt = getAppointmentById(appointmentId);
         String currentStatus = appt.getStatus();
 
@@ -95,9 +103,14 @@ public class AppointmentService {
             throw new BusinessRuleException("Cannot alter an appointment that is already " + currentStatus);
         }
 
-        if (!newStatus.equals("SCHEDULED") && !newStatus.equals("IN_PROGRESS") &&
-                !newStatus.equals("COMPLETE") && !newStatus.equals("CANCELLED")) {
-            throw new BusinessRuleException("Invalid status update requested.");
+        if (currentStatus.equals("SCHEDULED")) {
+            if (!newStatus.equals("IN_PROGRESS") && !newStatus.equals("CANCELLED")) {
+                throw new BusinessRuleException("A SCHEDULED appointment can only be changed to IN_PROGRESS or CANCELLED.");
+            }
+        } else if (currentStatus.equals("IN_PROGRESS")) {
+            if (!newStatus.equals("COMPLETE")) {
+                throw new BusinessRuleException("An IN_PROGRESS appointment can only be changed to COMPLETE.");
+            }
         }
 
         appt.setStatus(newStatus);
