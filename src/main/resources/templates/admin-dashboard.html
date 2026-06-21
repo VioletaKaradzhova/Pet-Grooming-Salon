@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Paws & Relax | Home</title>
+    <title>Paws & Relax | Admin</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -31,11 +31,36 @@
 </nav>
 
 <div class="container">
-    <div class="card" style="text-align: center;">
-        <h1>Welcome to Paws & Relax! 🐶🧼</h1>
-        <p style="font-size: 1.2rem;">The premier spa experience for your furry best friends.</p>
-        <br>
-        <a href="/login" class="btn">Get Started</a>
+    <h1>Salon Management Dashboard</h1>
+
+    <div class="card">
+        <h3>📅 All Salon Appointments</h3>
+        <p th:if="${allAppointments == null or allAppointments.isEmpty()}">No appointments scheduled.</p>
+
+        <ul>
+            <li th:each="appt : ${allAppointments}" class="item-row">
+                <div>
+                    <strong th:text="${appt.pet.name} + ' (' + ${appt.pet.owner.username} + ')'"></strong> -
+                    <span th:text="${appt.servicePackage.name}"></span><br>
+
+                    <small style="color: gray;" th:text="${#temporals.format(appt.appointmentDate, 'dd MMM yyyy, HH:mm')}"></small>
+                    <span th:text="${' [' + appt.status + ']'}"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>👥 Registered System Users</h3>
+        <ul>
+            <li th:each="user : ${allUsers}" class="item-row">
+                <strong th:text="${user.username}"></strong>
+
+                <span th:text="'Role: ' + ${user.role}"
+                      th:style="${user.role.name() != 'CLIENT' ? 'color: var(--secondary-color); font-weight: bold;' : 'color: gray;'}">
+                    </span>
+            </li>
+        </ul>
     </div>
 </div>
 </body>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flea & Tick Treatment | Paws & Relax</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1 style="color: var(--secondary-color);">Flea & Tick Treatment</h1>
+        <p><strong>Price: €25.00</strong></p>
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+            Ensure your pet is pest-free and comfortable. We use a specialized, veterinarian-approved medicated shampoo that kills fleas and ticks on contact. This soothing bath is followed by a visual inspection and application of a preventative topical ointment if requested.
+        </p>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a th:if="${session.user_id == null}" href="/login" class="btn" style="background-color: gray;">Login to Book</a>
+            <a th:if="${session.user_id != null}" href="/appointments/book" class="btn">Book Appointment</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

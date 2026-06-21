@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Paws & Relax | Home</title>
+    <title>Paws & Relax | Our Services</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -31,11 +31,20 @@
 </nav>
 
 <div class="container">
-    <div class="card" style="text-align: center;">
-        <h1>Welcome to Paws & Relax! 🐶🧼</h1>
-        <p style="font-size: 1.2rem;">The premier spa experience for your furry best friends.</p>
-        <br>
-        <a href="/login" class="btn">Get Started</a>
+    <h1>Our Grooming Services</h1>
+    <p style="text-align: center; margin-bottom: 30px;">Pamper your pet with our professional care packages.</p>
+
+    <div class="card" th:each="service : ${services}" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 th:text="${service.name}" style="margin-bottom: 5px;"></h3>
+            <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin: 0;" th:text="'€' + ${service.price}"></p>
+        </div>
+
+        <div>
+            <a th:if="${session.user_id == null}" href="/login" class="btn" style="background-color: gray;">Login to Book</a>
+
+            <a th:if="${session.user_id != null}" href="/appointments/book" class="btn">Book Appointment</a>
+        </div>
     </div>
 </div>
 </body>

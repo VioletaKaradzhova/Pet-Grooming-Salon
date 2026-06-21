@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bath & Brush | Paws & Relax</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1 style="color: var(--secondary-color);">Bath & Brush</h1>
+        <p><strong>Price: €35.00</strong></p>
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+            Our signature Bath & Brush service is perfect for keeping your pet's coat healthy, shiny, and smelling fresh.
+            This package includes a thorough wash with premium, hypoallergenic shampoo, followed by a warm blow-dry and a deep brush-out to remove loose undercoat and prevent matting.
+        </p>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a th:if="${session.user_id == null}" href="/login" class="btn" style="background-color: gray;">Login to Book</a>
+            <a th:if="${session.user_id != null}" href="/appointments/book" class="btn">Book Appointment</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

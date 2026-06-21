@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Full Grooming Spa | Paws & Relax</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1 style="color: var(--secondary-color);">Full Grooming Spa</h1>
+        <p><strong>Price: €75.00</strong></p>
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+            The ultimate pampering experience for your best friend. The Full Grooming Spa includes everything in the Bath & Brush, plus a customized breed-specific haircut, ear cleaning, paw pad trimming, and a spritz of dog-safe cologne. They will walk out looking ready for a magazine cover!
+        </p>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a th:if="${session.user_id == null}" href="/login" class="btn" style="background-color: gray;">Login to Book</a>
+            <a th:if="${session.user_id != null}" href="/appointments/book" class="btn">Book Appointment</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

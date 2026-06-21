@@ -39,7 +39,10 @@ public class AuthController {
 
         try {
             User user = authService.authenticateUser(loginDto);
+
             session.setAttribute("user_id", user.getId());
+            session.setAttribute("user_role", user.getRole().name());
+
             return "redirect:/dashboard";
         } catch (BusinessRuleException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -58,7 +61,10 @@ public class AuthController {
 
         try {
             User user = authService.registerUser(loginDto);
+
             session.setAttribute("user_id", user.getId());
+            session.setAttribute("user_role", user.getRole().name());
+
             return "redirect:/dashboard";
         } catch (BusinessRuleException e) {
             model.addAttribute("errorMessage", e.getMessage());
