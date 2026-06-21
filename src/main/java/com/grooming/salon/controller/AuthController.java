@@ -28,6 +28,12 @@ public class AuthController {
         return "login";
     }
 
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("loginDto", new LoginDto());
+        return "register";
+    }
+
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("loginDto") LoginDto loginDto,
                         BindingResult bindingResult,
@@ -56,7 +62,7 @@ public class AuthController {
                            HttpSession session,
                            Model model) {
         if (bindingResult.hasErrors()) {
-            return "login";
+            return "register";
         }
 
         try {
@@ -68,7 +74,7 @@ public class AuthController {
             return "redirect:/dashboard";
         } catch (BusinessRuleException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "login";
+            return "register";
         }
     }
 
