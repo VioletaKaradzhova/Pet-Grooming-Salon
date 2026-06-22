@@ -37,7 +37,9 @@
 </nav>
 
 <div class="container">
-    <h1>Your Dashboard</h1>
+    <div th:if="${errorMessage != null}" class="alert" th:text="${errorMessage}"></div>
+
+    <h1>My Dashboard</h1>
 
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -63,7 +65,7 @@
 
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>📅 Upcoming Appointments</h3>
+            <h3>📅 My Appointments</h3>
             <a href="/appointments/book" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">Book Service</a>
         </div>
 

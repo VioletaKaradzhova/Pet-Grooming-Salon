@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Paws & Relax | Edit Appointment</title>
+    <title>Paws & Relax | Edit Pet</title>
     <link rel="stylesheet" th:href="@{/css/style.css(v=3)}">
 </head>
 <body>
@@ -36,35 +36,24 @@
 </nav>
 
 <div class="container">
-    <div class="card" style="max-width: 600px; margin: 0 auto;">
-        <h2>Update Appointment</h2>
-
-        <form th:action="@{/appointments/{id}/edit(id=${appointmentId})}" th:object="${appointmentDto}" method="post">
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <h2>Update Pet Details</h2>
+        <form th:action="@{/pets/{id}/edit(id=${petId})}" th:object="${petDto}" method="post">
 
             <div>
-                <label>Which Pet?</label>
-                <select th:field="*{petId}">
-                    <option th:each="pet : ${userPets}" th:value="${pet.id}" th:text="${pet.name} + ' (' + ${pet.breed} + ')'"></option>
-                </select>
-                <div class="error-text" th:if="${#fields.hasErrors('petId')}" th:errors="*{petId}"></div>
+                <label>Pet's Name</label>
+                <input type="text" th:field="*{name}" placeholder="e.g. Max" />
+                <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
 
             <div>
-                <label>Choose a Service</label>
-                <select th:field="*{servicePackageId}">
-                    <option th:each="pkg : ${servicePackages}" th:value="${pkg.id}" th:text="${pkg.name} + ' - €' + ${#numbers.formatDecimal(pkg.price, 1, 2)}"></option>
-                </select>
-                <div class="error-text" th:if="${#fields.hasErrors('servicePackageId')}" th:errors="*{servicePackageId}"></div>
-            </div>
-
-            <div>
-                <label>Date & Time</label>
-                <input type="datetime-local" th:field="*{appointmentDate}" />
-                <div class="error-text" th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}"></div>
+                <label>Breed</label>
+                <input type="text" th:field="*{breed}" placeholder="e.g. Golden Retriever" />
+                <div class="error-text" th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}"></div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button type="submit" style="flex: 1;">Update Appointment</button>
+                <button type="submit" style="flex: 1;">Save Changes</button>
                 <a href="/dashboard" class="btn" style="flex: 1; background-color: gray; text-align: center;">Cancel</a>
             </div>
         </form>

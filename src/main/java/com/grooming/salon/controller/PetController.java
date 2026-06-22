@@ -5,10 +5,12 @@ import com.grooming.salon.model.entity.Pet;
 import com.grooming.salon.service.PetService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -79,11 +81,16 @@ public class PetController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deletePet(@PathVariable UUID id, HttpSession session) {
+    public String deletePet(@PathVariable UUID id, HttpSession session, RedirectAttributes redirectAttributes) {
         UUID userId = (UUID) session.getAttribute("user_id");
         if (userId == null) return "redirect:/login";
 
-        petService.deletePet(id, userId);
+        try {
+            petService.deletePet(id, userId);
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Action Blocked: You cannot delete a pet that has current, scheduled or past appointments.");
+        }
+
         return "redirect:/dashboard";
     }
 }

@@ -29,10 +29,9 @@ public class AppointmentController {
     public String showBookingForm(HttpSession session, Model model) {
         UUID userId = (UUID) session.getAttribute("user_id");
         if (userId == null) {
-            return "redirect:/login"; // Access control for guests
+            return "redirect:/login";
         }
 
-        // Pass data to the Thymeleaf view to populate the HTML <select> dropdowns
         model.addAttribute("appointmentDto", new AppointmentDto());
         model.addAttribute("userPets", petService.getPetsByOwner(userId));
         model.addAttribute("servicePackages", appointmentService.getAllServicePackages());
@@ -51,7 +50,6 @@ public class AppointmentController {
         }
 
         if (bindingResult.hasErrors()) {
-            // Repopulate dropdowns before returning to the view if validation fails
             model.addAttribute("userPets", petService.getPetsByOwner(userId));
             model.addAttribute("servicePackages", appointmentService.getAllServicePackages());
             return "book-appointment";
@@ -77,7 +75,6 @@ public class AppointmentController {
         UUID userId = (UUID) session.getAttribute("user_id");
         if (userId == null) return "redirect:/login";
 
-        // Fetch existing appointment to pre-fill the form
         Appointment appt = appointmentService.getAppointmentById(id);
 
         AppointmentDto dto = new AppointmentDto();
@@ -87,6 +84,10 @@ public class AppointmentController {
 
         model.addAttribute("appointmentDto", dto);
         model.addAttribute("appointmentId", id);
+
+        model.addAttribute("userPets", petService.getPetsByOwner(userId));
+        model.addAttribute("servicePackages", appointmentService.getAllServicePackages());
+
         return "edit-appointment";
     }
 
@@ -99,12 +100,14 @@ public class AppointmentController {
         UUID userId = (UUID) session.getAttribute("user_id");
         if (userId == null) return "redirect:/login";
 
-        if (bindingResult.hasFieldErrors("appointmentDate")) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("appointmentId", id);
+            model.addAttribute("userPets", petService.getPetsByOwner(userId));
+            model.addAttribute("servicePackages", appointmentService.getAllServicePackages());
             return "edit-appointment";
         }
 
-        appointmentService.rescheduleAppointment(id, dto, userId);
+        appointmentService.editAppointment(id, dto, userId);
         return "redirect:/dashboard";
     }
 }

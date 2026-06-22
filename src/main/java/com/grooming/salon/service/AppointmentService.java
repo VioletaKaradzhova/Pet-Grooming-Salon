@@ -80,18 +80,29 @@ public class AppointmentService {
                 .orElseThrow(() -> new BusinessRuleException("Appointment not found."));
     }
 
-    public void rescheduleAppointment(UUID appointmentId, AppointmentDto dto, UUID userId) {
+    public void editAppointment(UUID appointmentId, AppointmentDto dto, UUID userId) {
         Appointment appt = getAppointmentById(appointmentId);
 
         if (!appt.getPet().getOwner().getId().equals(userId)) {
             throw new BusinessRuleException("You do not have permission to edit this appointment.");
         }
-
         if (!appt.getStatus().equals("SCHEDULED")) {
-            throw new BusinessRuleException("You can only reschedule an appointment that is SCHEDULED.");
+            throw new BusinessRuleException("You can only edit an appointment that is SCHEDULED.");
         }
 
+        Pet newPet = petRepository.findById(dto.getPetId())
+                .orElseThrow(() -> new BusinessRuleException("Pet not found."));
+        if (!newPet.getOwner().getId().equals(userId)) {
+            throw new BusinessRuleException("You cannot book an appointment for a pet you do not own.");
+        }
+
+        ServicePackage newService = servicePackageRepository.findById(dto.getServicePackageId())
+                .orElseThrow(() -> new BusinessRuleException("Service package not found."));
+
         appt.setAppointmentDate(dto.getAppointmentDate());
+        appt.setPet(newPet);
+        appt.setServicePackage(newService);
+
         appointmentRepository.save(appt);
     }
 
