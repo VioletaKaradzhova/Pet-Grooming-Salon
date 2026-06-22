@@ -22,19 +22,44 @@ public class PetService {
         this.userRepository = userRepository;
     }
 
-    public void addPet(PetDto petDto, UUID ownerId) {
+    public List<Pet> getPetsByOwner(UUID ownerId) {
+        return petRepository.findAllByOwnerId(ownerId);
+    }
+
+    public void addPet(PetDto dto, UUID ownerId) {
         User owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new BusinessRuleException("Owner not found."));
+                .orElseThrow(() -> new BusinessRuleException("User not found."));
 
         Pet pet = new Pet();
-        pet.setName(petDto.getName());
-        pet.setBreed(petDto.getBreed());
+        pet.setName(dto.getName());
+        pet.setBreed(dto.getBreed());
         pet.setOwner(owner);
 
         petRepository.save(pet);
     }
 
-    public List<Pet> getPetsByOwner(UUID ownerId) {
-        return petRepository.findAllByOwnerId(ownerId);
+    public Pet getPetById(UUID petId, UUID ownerId) {
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new BusinessRuleException("Pet not found."));
+
+        if (!pet.getOwner().getId().equals(ownerId)) {
+            throw new BusinessRuleException("You do not have permission to view this pet.");
+        }
+        return pet;
+    }
+
+    public void updatePet(UUID petId, PetDto dto, UUID ownerId) {
+        Pet pet = getPetById(petId, ownerId);
+
+        pet.setName(dto.getName());
+        pet.setBreed(dto.getBreed());
+
+        petRepository.save(pet);
+    }
+
+    public void deletePet(UUID petId, UUID ownerId) {
+        Pet pet = getPetById(petId, ownerId);
+
+        petRepository.delete(pet);
     }
 }

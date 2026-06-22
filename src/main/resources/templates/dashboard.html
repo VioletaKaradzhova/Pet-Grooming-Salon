@@ -10,7 +10,6 @@
     <div class="nav-container">
         <a href="/" class="brand">🐾 Paws & Relax</a>
         <ul class="nav-menu">
-
             <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
@@ -28,20 +27,17 @@
             </th:block>
 
             <li th:if="${session.user_id == null}"><a href="/login">Login / Register</a></li>
-
             <li th:if="${session.user_role == 'CLIENT'}"><a href="/dashboard">Dashboard</a></li>
-
             <li th:if="${session.user_role != null and session.user_role != 'CLIENT'}">
                 <a href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
             </li>
-
             <li th:if="${session.user_id != null}"><a href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
 
 <div class="container">
-    <h1>My Dashboard</h1>
+    <h1>Your Dashboard</h1>
 
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -52,14 +48,22 @@
         <p th:if="${pets == null or pets.isEmpty()}">You haven't added any pets yet!</p>
         <ul>
             <li th:each="pet : ${pets}" class="item-row">
-                <strong th:text="${pet.name}"></strong> <span th:text="'(' + ${pet.breed} + ')'"></span>
+                <div>
+                    <strong th:text="${pet.name}"></strong> <span th:text="'(' + ${pet.breed} + ')'"></span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a th:href="@{/pets/{id}/edit(id=${pet.id})}" class="btn" style="padding: 8px 15px; font-size: 0.9rem; background-color: var(--primary-color);">Edit</a>
+                    <form th:action="@{/pets/{id}/delete(id=${pet.id})}" method="post" style="margin:0;">
+                        <button type="submit" class="btn-danger" onclick="return confirm('Are you sure you want to remove this pet?');">Delete</button>
+                    </form>
+                </div>
             </li>
         </ul>
     </div>
 
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>📅 My Appointments</h3>
+            <h3>📅 Upcoming Appointments</h3>
             <a href="/appointments/book" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">Book Service</a>
         </div>
 
@@ -70,11 +74,17 @@
                     <strong th:text="${appt.pet.name}"></strong> -
                     <span th:text="${appt.servicePackage.name}"></span><br>
                     <small style="color: gray;" th:text="${#temporals.format(appt.appointmentDate, 'dd MMM yyyy, HH:mm')}"></small>
-                    <span th:text="${' [' + appt.status + ']'}"></span>
+                    <span th:text="${' [' + appt.status + ']'}"
+                          th:style="${appt.status == 'COMPLETE' ? 'color: green; font-weight: bold;' : (appt.status == 'CANCELLED' ? 'color: red;' : 'color: var(--secondary-color);')}">
+                        </span>
                 </div>
-                <form th:if="${appt.status == 'SCHEDULED'}" th:action="@{/appointments/{id}/cancel(id=${appt.id})}" method="post" style="margin:0;">
-                    <button type="submit" class="btn-danger">Cancel</button>
-                </form>
+
+                <div th:if="${appt.status == 'SCHEDULED'}" style="display: flex; gap: 10px;">
+                    <a th:href="@{/appointments/{id}/edit(id=${appt.id})}" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">Edit</a>
+                    <form th:action="@{/appointments/{id}/cancel(id=${appt.id})}" method="post" style="margin:0;">
+                        <button type="submit" class="btn-danger">Cancel</button>
+                    </form>
+                </div>
             </li>
         </ul>
     </div>
@@ -89,11 +99,8 @@
                 <a href="/contact">Contact</a>
                 <a href="/services">Services</a>
             </th:block>
-
             <a th:if="${session.user_id == null}" href="/login">Login / Register</a>
-
             <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard">Dashboard</a>
-
             <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
         </div>
         <div class="copyright">
@@ -101,6 +108,5 @@
         </div>
     </div>
 </footer>
-
 </body>
 </html>
