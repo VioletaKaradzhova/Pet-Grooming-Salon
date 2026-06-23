@@ -67,7 +67,8 @@ public class PetController {
                           @Valid @ModelAttribute("petDto") PetDto dto,
                           BindingResult bindingResult,
                           HttpSession session,
-                          Model model) {
+                          Model model,
+                          RedirectAttributes redirectAttributes) {
         UUID userId = (UUID) session.getAttribute("user_id");
         if (userId == null) return "redirect:/login";
 
@@ -77,6 +78,8 @@ public class PetController {
         }
 
         petService.updatePet(id, dto, userId);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Pet successfully updated.");
         return "redirect:/dashboard";
     }
 
@@ -87,6 +90,7 @@ public class PetController {
 
         try {
             petService.deletePet(id, userId);
+            redirectAttributes.addFlashAttribute("successMessage", "Pet successfully deleted.");
         } catch (DataIntegrityViolationException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Action Blocked: You cannot delete a pet that has current, scheduled or past appointments.");
         }

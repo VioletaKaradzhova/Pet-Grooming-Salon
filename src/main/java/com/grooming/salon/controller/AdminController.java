@@ -11,12 +11,8 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -61,13 +57,19 @@ public class AdminController {
     }
 
     @PostMapping("/appointments/{id}/status")
-    public String updateStatus(@PathVariable UUID id, @RequestParam("status") String newStatus, HttpSession session, Model model) {
+    public String updateStatus(@PathVariable UUID id, @RequestParam("status") String newStatus, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         String role = (String) session.getAttribute("user_role");
-
         if (role == null || role.equals("CLIENT")) return "redirect:/login";
 
         try {
             appointmentService.updateAppointmentStatus(id, newStatus, role);
+
+            if ("CANCELLED".equals(newStatus)) {
+                redirectAttributes.addFlashAttribute("successMessage", "Appointment successfully cancelled.");
+            } else {
+                redirectAttributes.addFlashAttribute("successMessage", "Appointment successfully updated.");
+            }
+
         } catch (BusinessRuleException e) {
             model.addAttribute("message", e.getMessage());
             return "error";

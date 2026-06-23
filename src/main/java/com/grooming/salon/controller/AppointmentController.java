@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -28,9 +29,7 @@ public class AppointmentController {
     @GetMapping("/book")
     public String showBookingForm(HttpSession session, Model model) {
         UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            return "redirect:/login";
-        }
+        if (userId == null) return "redirect:/login";
 
         model.addAttribute("appointmentDto", new AppointmentDto());
         model.addAttribute("userPets", petService.getPetsByOwner(userId));
@@ -45,9 +44,7 @@ public class AppointmentController {
                                   HttpSession session,
                                   Model model) {
         UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            return "redirect:/login";
-        }
+        if (userId == null) return "redirect:/login";
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("userPets", petService.getPetsByOwner(userId));
@@ -60,13 +57,13 @@ public class AppointmentController {
     }
 
     @PostMapping("/{id}/cancel")
-    public String cancelAppointment(@PathVariable UUID id, HttpSession session) {
+    public String cancelAppointment(@PathVariable UUID id, HttpSession session, RedirectAttributes redirectAttributes) {
         UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            return "redirect:/login";
-        }
+        if (userId == null) return "redirect:/login";
 
         appointmentService.cancelAppointment(id, userId);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Appointment successfully cancelled.");
         return "redirect:/dashboard";
     }
 
@@ -96,7 +93,8 @@ public class AppointmentController {
                                   @Valid @ModelAttribute("appointmentDto") AppointmentDto dto,
                                   BindingResult bindingResult,
                                   HttpSession session,
-                                  Model model) {
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
         UUID userId = (UUID) session.getAttribute("user_id");
         if (userId == null) return "redirect:/login";
 
@@ -108,6 +106,8 @@ public class AppointmentController {
         }
 
         appointmentService.editAppointment(id, dto, userId);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Appointment successfully updated.");
         return "redirect:/dashboard";
     }
 }

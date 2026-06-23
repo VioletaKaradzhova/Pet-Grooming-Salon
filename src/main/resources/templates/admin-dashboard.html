@@ -10,6 +10,9 @@
 <div th:replace="~{fragments :: navbar}"></div>
 
 <div class="container">
+
+    <div th:if="${successMessage != null}" class="alert" style="background-color: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; margin-bottom: 20px;" th:text="${successMessage}"></div>
+
     <h1 style="color: var(--secondary-color);">Salon Management System</h1>
 
     <div class="card" th:if="${session.user_role == 'ADMIN' or session.user_role == 'MANAGEMENT'}">
@@ -19,7 +22,7 @@
         <form th:action="@{/admin/employees/create}" th:object="${employeeDto}" method="post" style="display: flex; gap: 15px; align-items: flex-end; flex-direction: row; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 200px;">
                 <label>Username</label>
-                <input type="text" th:field="*{username}" placeholder="New employee handle" />
+                <input type="text" th:field="*{username}" placeholder="username" />
                 <div class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
             </div>
             <div style="flex: 1; min-width: 200px;">
@@ -54,7 +57,7 @@
                 </div>
 
                 <div th:if="${appt.status != 'COMPLETE' and appt.status != 'CANCELLED'}">
-                    <form th:action="@{/admin/appointments/{id}/status(id=${appt.id})}" method="post" style="display: flex; gap: 10px; flex-direction: row;">
+                    <form th:action="@{/admin/appointments/{id}/status(id=${appt.id})}" method="post" style="display: flex; gap: 10px; flex-direction: row;" onsubmit="return confirmStaffStatusChange(this);">
                         <select name="status" style="padding: 5px; font-size: 0.9rem;">
 
                             <th:block th:if="${appt.status == 'SCHEDULED'}">
@@ -89,5 +92,14 @@
 
 <div th:replace="~{fragments :: footer}"></div>
 
+<script>
+    function confirmStaffStatusChange(form) {
+        var selectedStatus = form.elements["status"].value;
+        if (selectedStatus === 'CANCELLED') {
+            return confirm('Are you sure you want to cancel this appointment?');
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

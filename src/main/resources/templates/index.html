@@ -17,6 +17,10 @@
         <a th:if="${session.user_id == null}" href="/login" class="btn">Get Started</a>
         <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard" class="btn">My Dashboard</a>
         <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" class="btn">Staff Area</a>
+
+        <p style="text-align: center; margin-top: 20px;">
+            Don't have an account? <a th:href="@{/register}" style="color: var(--primary-color); font-weight: bold;">Register here</a>
+        </p>
     </div>
 </div>
 
