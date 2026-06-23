@@ -3,26 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Paws & Relax | Home</title>
-    <link rel="stylesheet" th:href="@{/css/style.css(v=3)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=4)}">
 </head>
 <body>
 
 <div th:replace="~{fragments :: navbar}"></div>
 
-<div class="container">
-    <div class="card" style="text-align: center;">
-        <h1>Welcome to Paws & Relax! 🐶🧼</h1>
-        <p style="font-size: 1.2rem;">The premier spa experience for your furry best friends.</p>
-        <br>
-        <a th:if="${session.user_id == null}" href="/login" class="btn">Get Started</a>
-        <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard" class="btn">My Dashboard</a>
-        <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" class="btn">Staff Area</a>
-
-        <p style="text-align: center; margin-top: 20px;">
-            Don't have an account? <a th:href="@{/register}" style="color: var(--primary-color); font-weight: bold;">Register here</a>
-        </p>
+<header class="hero-section">
+    <div class="hero-content">
+        <h1>Pamper Your Pet at Paws & Relax 🐾</h1>
+        <p>Top-tier grooming, spa treatments, and tender loving care for your furry best friend. Because they deserve a spa day too!</p>
+        <div style="margin-top: 25px;">
+            <a th:if="${session.user_id == null}" href="/login" class="btn" style="font-size: 1.2rem; padding: 15px 30px;">Get Started</a>
+            <a th:if="${session.user_role == 'CLIENT'}" href="/appointments/book" class="btn" style="font-size: 1.2rem; padding: 15px 30px;">Book a Spa Day</a>
+            <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" class="btn" style="font-size: 1.2rem; padding: 15px 30px;">Staff Dashboard</a>
+        </div>
     </div>
-</div>
+</header>
+
+<main class="container">
+
+    <section style="margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">Our Premium Services</h2>
+
+        <div class="services-grid">
+            <div class="card service-card">
+                <div class="service-icon">🛁</div>
+                <h3>Bath & Brush</h3>
+                <p>A relaxing hydro-massage bath, blow-dry, and thorough brush out to leave their coat shiny, healthy, and shedding-free.</p>
+            </div>
+
+            <div class="card service-card">
+                <div class="service-icon">✂️</div>
+                <h3>Full Spa Groom</h3>
+                <p>The ultimate makeover! Includes our luxury bath, custom breed-specific haircut, nail trim, ear cleaning, and a stylish bandana.</p>
+            </div>
+
+            <div class="card service-card">
+                <div class="service-icon">🐶</div>
+                <h3>Puppy's First Trim</h3>
+                <p>A gentle, stress-free introduction to grooming for puppies under 6 months old. Lots of treats, cuddles, and positive reinforcement!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card trust-banner">
+        <h2>Why Dogs Love Us (And Owners Do Too!)</h2>
+        <p>At Paws & Relax, we believe grooming should never be stressful. Our certified groomers use fear-free techniques, hypoallergenic premium products, and give endless cuddles to ensure your pet leaves wagging their tail.</p>
+
+        <div class="trust-checkmarks">
+            <span>✅ Certified Groomers</span>
+            <span>✅ Cage-Free Drying</span>
+            <span>✅ 1-on-1 Attention</span>
+            <span>✅ Hypoallergenic Shampoos</span>
+        </div>
+    </section>
+
+</main>
 
 <div th:replace="~{fragments :: footer}"></div>
 

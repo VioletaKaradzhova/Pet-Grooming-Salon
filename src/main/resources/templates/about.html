@@ -2,25 +2,80 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>About Us | Paws & Relax</title>
-    <link rel="stylesheet" th:href="@{/css/style.css(v=3)}">
+    <title>Paws & Relax | About Us</title>
+    <link rel="stylesheet" th:href="@{/css/style.css(v=5)}">
 </head>
 <body>
 
 <div th:replace="~{fragments :: navbar}"></div>
 
-<div class="container">
-    <div class="card" style="text-align: center;">
-        <h1 style="color: var(--secondary-color);">Our Story</h1>
-        <p style="font-size: 1.1rem; line-height: 1.8; text-align: left;">
-            Founded by lifelong animal lovers, <strong>Paws & Relax</strong> was built on a simple philosophy: every pet deserves to be treated with patience, love, and respect.
-            <br><br>
-            What started as a small neighborhood washing station has blossomed into a full-service, stress-free grooming spa. We believe that grooming is essential not just for looking good, but for your pet's overall health and happiness. Our certified groomers use only the highest quality, pet-safe products to ensure a soothing experience.
-            <br><br>
-            Whether it is a quick nail trim or a full spa day, our team treats your furry family members exactly like our own.
-        </p>
+<header class="hero-section about-hero">
+    <div class="hero-content">
+        <h1>About Paws & Relax</h1>
+        <p>Where passion for pets meets professional grooming excellence.</p>
     </div>
-</div>
+</header>
+
+<main class="container">
+
+    <section class="card about-story">
+        <h2>Our Story</h2>
+        <p>Founded in 2026, Paws & Relax started with a simple mission: to create a grooming experience that pets actually enjoy. We realized that many dogs view a trip to the groomer with anxiety. We set out to change that by designing a fear-free, cage-less salon where every pet is treated like family.</p>
+        <p>Today, we are proud to be the premier grooming destination, offering top-tier spa treatments, breed-specific styling, and most importantly, endless patience and love for your furry best friends.</p>
+    </section>
+
+    <section style="margin: 40px 0;">
+        <h2 style="text-align: center; margin-bottom: 30px;">Our Core Values</h2>
+
+        <div class="services-grid">
+            <div class="card service-card">
+                <div class="service-icon">❤️</div>
+                <h3>Fear-Free Handling</h3>
+                <p>We work at your pet's pace. No rushing, no forcing. Just gentle encouragement and lots of treats to keep them happy.</p>
+            </div>
+
+            <div class="card service-card">
+                <div class="service-icon">🌿</div>
+                <h3>Premium Products</h3>
+                <p>We use only luxury, hypoallergenic, and eco-friendly shampoos and conditioners to protect sensitive skin and coats.</p>
+            </div>
+
+            <div class="card service-card">
+                <div class="service-icon">🤝</div>
+                <h3>Total Transparency</h3>
+                <p>You will always know exactly what products we use and how your pet behaved during their relaxing spa day.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 style="text-align: center; margin-bottom: 30px;">Meet Our Expert Groomers</h2>
+
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="avatar">💇‍♀️</div>
+                <h3>Maria Invanova</h3>
+                <p class="title">Master Stylist & Founder</p>
+                <p>With over 10 years of experience, Maria specializes in breed-standard cuts and creative grooming. She is a certified fear-free professional.</p>
+            </div>
+
+            <div class="team-member">
+                <div class="avatar">💇‍♂️</div>
+                <h3>George Silvester</h3>
+                <p class="title">Senior Groomer</p>
+                <p>George is our resident "dog whisperer." He has a magical ability to calm even the most anxious pups and gives the best hydro-massages.</p>
+            </div>
+
+            <div class="team-member">
+                <div class="avatar">👩‍🦱</div>
+                <h3>Nikol Petrova</h3>
+                <p class="title">Puppy Specialist</p>
+                <p>Nikol loves introducing puppies to the grooming process. Her patience ensures their very first haircut is a positive, happy experience.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
 
 <div th:replace="~{fragments :: footer}"></div>
 
