@@ -55,7 +55,7 @@ The application is built around a secure, role-based architecture. It features a
 1. **Clone the Repository:**
     ```bash
    git clone https://github.com/VioletaKaradzhova/Pet-Grooming-Salon.git
-   cd paws-and-relax
+   cd pet-grooming-salon
    
 2. **Configure the Database:**
 
