@@ -6,9 +6,13 @@
     <div class="nav-container">
         <a href="/" class="brand">🐾 Paws & Relax</a>
         <ul class="nav-menu">
-            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
+
+            <th:block th:if="${session.user_role == null}">
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
+            </th:block>
+
+            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
                 <li><a href="/contact">Contact</a></li>
                 <li>
                     <a href="/services">Services ▼</a>
@@ -21,6 +25,7 @@
                     </div>
                 </li>
             </th:block>
+
             <li th:if="${session.user_id == null}"><a href="/login">Login</a></li>
             <li th:if="${session.user_role == 'CLIENT'}"><a href="/dashboard">Dashboard</a></li>
             <li th:if="${session.user_role != null and session.user_role != 'CLIENT'}">
@@ -34,12 +39,17 @@
 <footer th:fragment="footer">
     <div class="footer-container">
         <div class="footer-links">
-            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
+
+            <th:block th:if="${session.user_role == null}">
                 <a href="/">Home</a>
                 <a href="/about">About</a>
+            </th:block>
+
+            <th:block th:if="${session.user_role == null or session.user_role == 'CLIENT'}">
                 <a href="/contact">Contact</a>
                 <a href="/services">Services</a>
             </th:block>
+
             <a th:if="${session.user_id == null}" href="/login">Login</a>
             <a th:if="${session.user_role == 'CLIENT'}" href="/dashboard">Dashboard</a>
             <a th:if="${session.user_role != null and session.user_role != 'CLIENT'}" href="/admin/dashboard" style="color: var(--secondary-color);">Staff Dashboard</a>
