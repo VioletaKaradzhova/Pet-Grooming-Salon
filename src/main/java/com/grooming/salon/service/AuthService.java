@@ -6,12 +6,9 @@ import com.grooming.salon.model.dto.LoginDto;
 import com.grooming.salon.model.entity.Role;
 import com.grooming.salon.model.entity.User;
 import com.grooming.salon.repository.UserRepository;
+import com.grooming.salon.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HexFormat;
 import java.util.Optional;
 
 @Service
@@ -30,7 +27,7 @@ public class AuthService {
 
         User user = new User();
         user.setUsername(dto.getUsername());
-        user.setPassword(hashPassword(dto.getPassword()));
+        user.setPassword(PasswordUtil.hashPassword(dto.getPassword()));
         user.setRole(Role.CLIENT);
 
         return userRepository.save(user);
@@ -44,7 +41,7 @@ public class AuthService {
         }
 
         User user = userOpt.get();
-        if (!user.getPassword().equals(hashPassword(dto.getPassword()))) {
+        if (!user.getPassword().equals(PasswordUtil.hashPassword(dto.getPassword()))) {
             throw new BusinessRuleException("Invalid username or password.");
         }
 
@@ -66,19 +63,9 @@ public class AuthService {
 
         User employee = new User();
         employee.setUsername(dto.getUsername());
-        employee.setPassword(hashPassword(dto.getPassword()));
+        employee.setPassword(PasswordUtil.hashPassword(dto.getPassword()));
         employee.setRole(dto.getRole());
 
         userRepository.save(employee);
-    }
-
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Failed to hash password", e);
-        }
     }
 }

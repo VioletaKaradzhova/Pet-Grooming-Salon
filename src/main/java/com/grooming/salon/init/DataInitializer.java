@@ -5,8 +5,8 @@ import com.grooming.salon.model.entity.ServicePackage;
 import com.grooming.salon.model.entity.User;
 import com.grooming.salon.repository.ServicePackageRepository;
 import com.grooming.salon.repository.UserRepository;
+import com.grooming.salon.util.PasswordUtil;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,14 +16,10 @@ public class DataInitializer implements CommandLineRunner {
 
     private final ServicePackageRepository servicePackageRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(ServicePackageRepository servicePackageRepository,
-                           UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
+    public DataInitializer(ServicePackageRepository servicePackageRepository, UserRepository userRepository) {
         this.servicePackageRepository = servicePackageRepository;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -32,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setPassword(PasswordUtil.hashPassword("admin123"));
 
             admin.setRole(Role.ADMIN);
 
