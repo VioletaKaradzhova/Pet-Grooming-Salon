@@ -1,8 +1,12 @@
 package com.grooming.salon.init;
 
+import com.grooming.salon.model.entity.Role;
 import com.grooming.salon.model.entity.ServicePackage;
+import com.grooming.salon.model.entity.User;
 import com.grooming.salon.repository.ServicePackageRepository;
+import com.grooming.salon.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,13 +15,31 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     private final ServicePackageRepository servicePackageRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(ServicePackageRepository servicePackageRepository) {
+    public DataInitializer(ServicePackageRepository servicePackageRepository,
+                           UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
         this.servicePackageRepository = servicePackageRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+        if (userRepository.findByUsername("admin").isEmpty()) {
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("admin123"));
+
+            admin.setRole(Role.ADMIN);
+
+            userRepository.save(admin);
+            System.out.println("✅ Default Admin account created: admin / admin123");
+        }
+
         if (servicePackageRepository.count() == 0) {
             ServicePackage s1 = new ServicePackage(); s1.setName("Bath & Brush"); s1.setPrice(35.0);
             ServicePackage s2 = new ServicePackage(); s2.setName("Full Grooming Spa"); s2.setPrice(75.0);
@@ -26,7 +48,7 @@ public class DataInitializer implements CommandLineRunner {
             ServicePackage s5 = new ServicePackage(); s5.setName("Puppy's First Trim"); s5.setPrice(40.0);
 
             servicePackageRepository.saveAll(List.of(s1, s2, s3, s4, s5));
-            System.out.println("Initialized 5 default grooming services in the database!");
+            System.out.println("✅ Initialized 5 default grooming services in the database!");
         }
     }
 }
